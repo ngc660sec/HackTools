@@ -38,9 +38,9 @@ class Subdomain_detection():
         self.save_subdomain_url()
 
 if __name__ == '__main__':
-  ##使用前创建你的zi_domain.txt，用于存放子域名，在类下的init处定义你的根域名和请求方式
+  #使用前创建你的zi_domain.txt，用于存放子域名，在类下的init处定义你的根域名和请求方式
     subdomain_detection = Subdomain_detection()
-    pool = ThreadPoolExecutor(1)
+    pool = ThreadPoolExecutor(1) #用于定义你的线程数
     fp = open('./zi_domain.txt','r',encoding='utf-8')
     zi_domain_list = fp.read().splitlines()
     for domain in zi_domain_list:
