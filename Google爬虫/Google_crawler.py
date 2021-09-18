@@ -1,3 +1,4 @@
+import time
 from selenium import webdriver
 from lxml import etree
 import re
@@ -9,9 +10,10 @@ class Google_crawler():
         self.google_url = 'https://www.google.com.hk'
         self.google_grammar = input('请输入你的谷歌语法，空格用+代替:')
         self.crawl_num = int(input('请输入你要爬取的页数:'))
-        self.search_url = 'https://www.google.com.hk/search?q='+self.google_grammar+'&hl=en&start=10'
+        self.search_url = 'https://www.google.com.hk/search?q='+self.google_grammar+'&hl=en&start=20'
         self.pattern = '(?<=q=).*?(?=&)'
         self.empty_list = []
+        self.crawl_url_list = []
 
     def Initialize_the_browser(self):
         self.bro = webdriver.Chrome(executable_path='chromedriver.exe')
@@ -20,7 +22,7 @@ class Google_crawler():
 
     def Analytical_data(self,etree_text):
         tree_data = etree_text.xpath('//*[@class="kCrYT"]')
-        next_click = self.bro.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div/div/a[2]/span')
+        next_click = self.bro.find_element_by_xpath('//*[@id="main"]/footer/div[1]/div/div/a[3]/span')
         for own_tree_data in tree_data:
             new_own_tree_data = own_tree_data.xpath('./a/@href')
             # print(new_own_tree_data)
@@ -31,8 +33,9 @@ class Google_crawler():
                 old_tree_list_url = new_own_tree_data[0]
                 tree_url = re.findall(self.pattern, old_tree_list_url)
                 crawl_url = unquote(tree_url[0])
-                self.fp.write(crawl_url+'\n')
-                print('[*]>>>'+crawl_url+' 写入完成!')
+                self.crawl_url_list.append(crawl_url)
+                print('[*]>>>'+crawl_url+'爬取成功!')
+        print('正在去除重复项')
         return next_click
 
     def Crawl_data(self):
@@ -47,13 +50,22 @@ class Google_crawler():
                 next_click = self.Analytical_data(page_tree)
                 next_click.click()
 
+    def Storage_url(self):
+        self.crawl_url_list = set(self.crawl_url_list)
+        self.crawl_url_list = list(self.crawl_url_list)
+        for crawl_url in self.crawl_url_list:
+            self.fp.write(crawl_url + '\n')
+            print('已去除重复项！')
+            print('[*]>>>' + crawl_url + ' 写入完成!')
+
     def run(self):
         self.Initialize_the_browser()
         self.Crawl_data()
+        self.Storage_url()
 
 if __name__ == '__main__':
     #使用前先安装最上方的第三方库，再安装自己Google版本对应的chromedriver.exe
-    #使用过程中需要手动禁止浏览器的JS，完成之后输入[S]即可
+    #使用过程中需要手动禁止浏览器的JS，完成之后输入[S]即可，注意大写！！
     introduce = """
             ------【Se37安全团队——山屿.EQr开发】------
             ------【使用前请先查看源代码，以寻求帮助】------
