@@ -17,7 +17,7 @@ class Sqlmap_batch_scan():
         print(f'[+]>>>已生成报告:{new_url_name}.txt')
         judge_file = open('./ok_url/'+new_url_name+'.txt')
         judge_file_text = judge_file.readlines()
-        if "Payload" in judge_file_text:
+        if "Payload" in str(judge_file_text):
             judge_file.close()
             fp = open('./ok_url/'+new_url_name+'.txt','a+')
             fp.write('\n'+'测试url:'+sqlmap_url+' \n')
