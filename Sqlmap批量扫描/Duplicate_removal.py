@@ -17,11 +17,17 @@ class Duplicate_removal():
         ok_url_file = open('./sqlmap_ok_url.txt','w')
         flase_url_file = open('./sqlmap_flase_url.txt','w')
         for ok_url in self.new_ok_url_text:
-            ok_url_file.write(ok_url)
+            new_ok_url = ok_url.strip()
+            if new_ok_url == '':
+                continue
+            else:
+                ok_url_file.write(new_ok_url + '\n')
         for flase_url in self.new_flase_url_text:
-            flase_url_file.write(flase_url)
-        flase_url_file.close()
-        ok_url_file.close()
+            new_flase_url = flase_url.strip()
+            if new_flase_url == '':
+                continue
+            else:
+                flase_url_file.write(new_flase_url + '\n')
 
     def run(self):
         self.main()
@@ -29,5 +35,6 @@ class Duplicate_removal():
         print("[*]>>>去重完成")
 
 if __name__ == '__main__':
-    duplicate_removal = Duplicate_removal()
-    duplicate_removal.run()
+    # duplicate_removal = Duplicate_removal()
+    # run = duplicate_removal.run()
+    pass
