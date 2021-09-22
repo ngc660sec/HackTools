@@ -1,4 +1,5 @@
 import os
+from Duplicate_removal import Duplicate_removal
 from concurrent.futures import ThreadPoolExecutor
 import hashlib
 
@@ -6,11 +7,10 @@ class Sqlmap_batch_scan():
 
     def __init__(self):
         self.sqlmap_ok_url = []
-        self.sqlmao_flase_url = []
-        pass
+        self.sqlmap_flase_url = []
 
     def run_sqlmap(self,sqlmap_url,url_name):
-        print(f"[*]>>>正在测试URL:{sqlmap_url}")
+        print(f"[+]>>>正在测试URL:{sqlmap_url}")
         new_url_name = hashlib.md5(url_name.encode("utf-8")).hexdigest()
         #存放报告的路径
         report_path = 'E:/python/HACK/Sqlmap批量扫描/ok_url/'
@@ -26,11 +26,12 @@ class Sqlmap_batch_scan():
             fp.close()
             print(f'[*]>>>已验证成功URL:{sqlmap_url}')
             self.sqlmap_ok_url.append(sqlmap_url)
+
         else:
             judge_file.close()
             os.remove('./ok_url/'+new_url_name+'.txt')
             print(f'[!]>>>未验证成功URL:{sqlmap_url}')
-            self.sqlmao_flase_url.append(sqlmap_url)
+            self.sqlmap_flase_url.append(sqlmap_url)
 
     def storage_url(self):
         sqlmap_ok_url_file = open('./sqlmap_ok_url.txt','a+')
@@ -38,7 +39,7 @@ class Sqlmap_batch_scan():
         for ok_urls in self.sqlmap_ok_url:
             ok_url = ok_urls.strip()
             sqlmap_ok_url_file.write(ok_url+'\n')
-        for flase_urls in self.sqlmao_flase_url:
+        for flase_urls in self.sqlmap_flase_url:
             flase_url = flase_urls.strip()
             sqlmap_flase_url_file.write(flase_url+'\n')
         print('[*]>>>链接存储完成！！')
@@ -55,6 +56,13 @@ if __name__ == '__main__':
     sqlmap_urls = sqlmap_file.readlines()
     for url in sqlmap_urls:
         sqlmap_url = url.strip()
-        url_name = sqlmap_url
-        sqlmap_pool.submit(sqlmap_batch_scan.run,sqlmap_url,url_name)
+        if sqlmap_url == '':
+            continue
+        else:
+            url_name = sqlmap_url
+            sqlmap_pool.submit(sqlmap_batch_scan.run, sqlmap_url, url_name)
     sqlmap_file.close()
+    print('[*]>>>所有URL验证完毕!!')
+    duplicate_removal = Duplicate_removal()
+    duplicate_removal.run()
+
