@@ -61,5 +61,6 @@
 - 需要添加sqlmap环境变量使用
 - 在同一目录创建sqlmap_url.txt文件，将需要扫描的url添加其中
 - 需要在终端输入python 脚本.py 使用
+- 完成之后再运行Duplicate_removal.py文件去重即可
 
 #### 后续更新...
