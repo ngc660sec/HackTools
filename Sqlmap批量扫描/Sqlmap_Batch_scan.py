@@ -62,6 +62,7 @@ if __name__ == '__main__':
             url_name = sqlmap_url
             sqlmap_pool.submit(sqlmap_batch_scan.run, sqlmap_url, url_name)
     sqlmap_file.close()
+    sqlmap_pool.shutdown()
     print('[*]>>>所有URL验证完毕!!')
     duplicate_removal = Duplicate_removal()
     duplicate_removal.run()
